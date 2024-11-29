@@ -1,3 +1,29 @@
+/**
+ * Program Database Mahasiswa
+ * 
+ * Namafile: main.c
+ * file database: data.txt
+ * 
+ * Program ini adalah program database mahasiswa yang dapat menambahkan data mahasiswa
+ * kedalam database, dan menampilkan data mahasiswa yang ada dalam database.
+ * 
+ * Cara kerja program ini adalah dengan membaca file database yang berisi data mahasiswa
+ * yang sudah ditulis dengan format yang sudah ditentukan. Program ini akan membaca file
+ * database tersebut dan menyimpannya dalam array of struct Mahasiswa. Setiap kali user
+ * memilih menu, maka program akan merefresh data yang ada dalam array of struct Mahasiswa
+ * dengan membaca ulang file database tersebut.
+ * 
+ * Program ini dibuat oleh Kelompok 3 A1 2024 PDP :
+ * 1. Panji Briant Depari (241402034)
+ * 2. M. Rizky Fadillah (241402001)
+ * 3. David Wijaya Sibarani (241402040)
+ * 4. Chrisa Grant Banuarea (241402057)
+ * 5. Marialise Novita br Aritonang (241402064)
+ * 
+ */
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
