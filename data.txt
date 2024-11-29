@@ -15,3 +15,5 @@ Eko Tanjung|241402039|Teknologi Informasi|etanjung@mail.net|082234567890
 Ayu Martini|241401129|Ilmu Komputer|amartini@email.org|083345678901
 Nugroho Adi|241402040|Teknologi Informasi|nadi@mail.com|084456789012
 Maya Pancamurti|241401130|Ilmu Komputer|mtrimurti@email.net|085567890123
+Mark Marquez|190202123|Teknik Kedokteran|markdokter@kapan.lagi|081212121212
+David Wijaya Sibarani|241402040|Teknologi Informasi|dapidti@gmail.com|081209876543
