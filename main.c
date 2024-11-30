@@ -1,3 +1,29 @@
+/**
+ * Program Database Mahasiswa
+ * 
+ * Namafile: main.c
+ * file database: data.txt
+ * 
+ * Program ini adalah program database mahasiswa yang dapat menambahkan data mahasiswa
+ * kedalam database, dan menampilkan data mahasiswa yang ada dalam database.
+ * 
+ * Cara kerja program ini adalah dengan membaca file database yang berisi data mahasiswa
+ * yang sudah ditulis dengan format yang sudah ditentukan. Program ini akan membaca file
+ * database tersebut dan menyimpannya dalam array of struct Mahasiswa. Setiap kali user
+ * memilih menu, maka program akan merefresh data yang ada dalam array of struct Mahasiswa
+ * dengan membaca ulang file database tersebut.
+ * 
+ * Program ini dibuat oleh Kelompok 3 A1 2024 PDP :
+ * 1. Panji Briant Depari (241402034)
+ * 2. M. Rizky Fadillah (241402001)
+ * 3. David Wijaya Sibarani (241402040)
+ * 4. Chrisa Grant Banuarea (241402057)
+ * 5. Marialise Novita br Aritonang (241402064)
+ * 
+ */
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -59,8 +85,6 @@ void freeArray();
 int addMahasiswa(const char *path, const char *nam, const char *nim, const char *pro, const char *ema, const char *nhp);
 void getInput(const char *text, char *input, int size, char type);
 void tambahData(const char *path);
-int hapusMhs(const char *path);
-void editMhs(const char *path);
 void printMahasiswa();
 
 
@@ -131,8 +155,6 @@ int menu()
     printf("|i| 0. Keluar Program\n");
     printf("|i| 1. Tambahkan data baru\n");
     printf("|i| 2. Tampilkan Semua data\n");
-    printf("|i| 3. Hapus data\n");
-    printf("|i| 4. Edit data\n");
     printf("\n");
     printf("|!| Masukkan angka diatas sesuai yang anda inginkan\n");
     printf(TEXT_BOLD "|?| Pilihan: "RESET);
@@ -156,12 +178,6 @@ int menu()
         case 2:
             printMahasiswa();
             break;
-        case 3:
-            hapusMhs(path);
-            break;
-        case 4:
-            editMhs(path);
-            break;
 
         default:
             printf(TEXT_RED"|x| Pilihan tidak ada, silahkan pilih dengan benar!\n"RESET);
@@ -181,9 +197,6 @@ int menu()
     pauseClear();
     printHeader();
     return menu();
-
-    
-
 
     return choice;
 }
@@ -404,149 +417,5 @@ void tambahData(const char *path)
         printf(TEXT_RED"|x| Data gagal ditambahkan, silahkan coba lagi!\n"RESET);
     }
     pause();
-}
-
-
-/* Fungsi menghapus data mahasiswa dengan meminta NIM sebagai keyword pencari */
-int hapusMhs(const char *path)
-{
-    char nim[13];
-    int i;
-
-    clearInputBuffer();
-    pauseClear();
-    printHeader();
-
-    printf(TEXT_BOLD TEXT_RED TEXT_UNDERLINE"|~| Hapus Data Mahasiswa\n" RESET);
-    getInput(TEXT_YELLOW "|?| NIM: " RESET, nim, 15, 'i');
-    printf(TEXT_ITALIC"|~| Mencari...\n"RESET);
-
-    // Mencari data mahasiswa dengan NIM yang dimaksud dengan mengecek 1 per 1 data yang ada dalam array mhs
-    for (i = 0; i < cnt_mhs; i++)
-    {
-        if (strcmp(mhs[i].nim, nim) == 0)
-            break; // Jika data ditemukan, maka akan keluar dari loop dengan i adalah index dari data yang dimaksud
-    }
-
-    pause();
-    if (i == cnt_mhs) // Jika i == cnt_mhs, maka data tidak ditemukan
-    {
-        printf(TEXT_RED"|!| Data tidak ditemukan\n"RESET);
-        return 0;
-    }
-
-    printf(TEXT_GREEN"\n|!| Data ditemukan, dengan:\n"RESET);
-    printf(TEXT_CYAN TEXT_BOLD"|i| Nama: %s\n", mhs[i].nam);
-    printf("|i| Nim: %s\n"RESET, mhs[i].nim);
-
-    // Mengkonfirmasi apakah data yang dimaksud akan dihapus atau tidak
-    if (confirm("Apakah anda yakin ingin menghapus data diatas?") != 1)
-    {
-        printf(TEXT_YELLOW"|~| Data tidak dihapus\n"RESET);
-        return 0;
-    }
-
-    // Jika konfirmasi berhasil, maka data akan dihapus dari database
-    // Data yang dimaksud tidak akan ditulis kedalam file
-    // Data lainnya akan tetap ditulis kedalam file
-    FILE *file;
-    file = fopen(path, "w");
-
-    for (int j = 0; j < cnt_mhs; j++)
-    {
-        if (j == i) continue; // Data yang dimaksud tidak akan ditulis kedalam file
-        
-        fprintf(file, "%s|%s|%s|%s|%s\n", mhs[j].nam, mhs[j].nim, mhs[j].pro, mhs[j].ema, mhs[j].nhp);
-    }
-
-    printf(TEXT_GREEN"|!| Data berhasil dihapus!\n"RESET);
-
-    fclose(file);
-
-    return 1;
-}
-
-/* Fungsi meng-edit data mahasiswa dengan meminta NIM sebagai keyword pencari; NIM tidak dapat diubah */
-void editMhs(const char *path)
-{
-    char nim[13];
-    int i;
-
-    clearInputBuffer();
-    pauseClear();
-    printHeader();
-
-    printf(TEXT_BOLD TEXT_YELLOW TEXT_UNDERLINE"|~| Edit Data Mahasiswa\n" RESET);
-    printf(TEXT_YELLOW"|i| kosongkan input jika tidak ingin mengubah suatu data\n\n" RESET);
-    getInput(TEXT_YELLOW "|?| NIM: " RESET, nim, 15, 'i');
-    printf(TEXT_ITALIC"|~| Mencari...\n"RESET);
-
-    // Mencari data mahasiswa dengan NIM yang dimaksud dengan mengecek 1 per 1 data yang ada dalam array mhs
-    for (i = 0; i < cnt_mhs; i++)
-    {
-        if (strcmp(mhs[i].nim, nim) == 0) // Jika data ditemukan, maka akan keluar dari loop dengan i adalah index dari data yang dimaksud
-        {
-            break;
-        }
-    }
-    pause();
-
-    // Jika data tidak ditemukan, maka akan menampilkan pesan kesalahan
-    if (i == cnt_mhs)
-    {
-        printf(TEXT_RED"|!| Data tidak ditemukan\n"RESET);
-        return;
-    }
-
-    // Meminta data baru yang akan diubah
-    char nam[60], pro[60], ema[75], nhp[18];
-
-
-    printf(TEXT_YELLOW"|?| Nama (%s): "RESET, mhs[i].nam);
-    getInput("", nam, 60, 'n');
-    strlen(nam) == 0 ? strcpy(nam, mhs[i].nam) : 0;
-
-    printf(TEXT_YELLOW"|?| Prodi (%s): "RESET, mhs[i].pro);
-    getInput("", pro, 60, 'p');
-    strlen(pro) == 0 ? strcpy(pro, mhs[i].pro) : 0;
-
-    printf(TEXT_YELLOW"|?| Email (%s): "RESET, mhs[i].ema);
-    getInput("", ema, 75, 'e');
-    strlen(ema) == 0 ? strcpy(ema, mhs[i].ema) : 0;
-
-    printf(TEXT_YELLOW"|?| No. HP (%s): "RESET, mhs[i].nhp);
-    getInput("", nhp, 18, 't');
-    strlen(nhp) == 0 ? strcpy(nhp, mhs[i].nhp) : 0;
-
-    printf("\n");
-    // Mengkonfirmasi data yang akan diubah
-    if (confirm("Apakah anda yakin ingin mengubah data ini?") != 1)
-    {
-        printf(TEXT_YELLOW"|~| Data tidak diubah\n"RESET);
-        return;
-    }
-
-    // Jika konfirmasi berhasil, maka data akan diubah dalam database
-    FILE *file;
-    file = fopen(path, "w");
-
-    // Mengubah data dengan menulis ulang data yang ada dalam file
-    // Dan ketika counter: j sama dengan i, yaitu data yang dimaksud, maka data yang akan diubah akan ditulis ulang
-    // Data lainnya akan tetap ditulis kedalam file tanpa perubahan
-    for (int j = 0; j < cnt_mhs; j++)
-    {
-        if (j == i)
-        {
-            fprintf(file, "%s|%s|%s|%s|%s\n", nam, mhs[j].nim, pro, ema, nhp); // Data yang diubah
-        }
-        else
-        {
-            fprintf(file, "%s|%s|%s|%s|%s\n", mhs[j].nam, mhs[j].nim, mhs[j].pro, mhs[j].ema, mhs[j].nhp);
-        }
-    }
-
-    printf(TEXT_GREEN"|!| Data berhasil diedit!\n"RESET);
-
-    fclose(file);
 }
 
